@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Де Теремки</title>
+<meta name="theme-color" content="#14110f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Теремки">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  /* Single dark look: night field, brass dial, one red needle. */
+  :root {
+    --bg: #14110f; --dial: #211c18; --ring: #b8925a; --fg: #efe6d8;
+    --muted: #8a7f70; --needle: #e2412e;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: "Helvetica Neue", Arial, system-ui, sans-serif;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px; padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+    text-align: center; -webkit-user-select: none; user-select: none;
+  }
+  h1 { margin: 0; font-size: 15px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .dial { position: relative; width: min(82vw, 380px); aspect-ratio: 1; }
+  .dial svg { width: 100%; height: 100%; display: block; }
+  #rose { transition: transform .15s linear; transform-origin: 50% 50%; }
+  .dist { font-size: clamp(40px, 12vw, 64px); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+  .dist small { font-size: .4em; color: var(--muted); font-weight: 600; margin-left: 4px; }
+  .sub { margin-top: 8px; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+  button {
+    font: inherit; font-size: 17px; font-weight: 700; color: var(--bg); background: var(--ring);
+    border: 0; border-radius: 999px; padding: 14px 28px; cursor: pointer;
+  }
+  button:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+  .err { color: var(--needle); font-size: 14px; max-width: 34ch; }
+  .onTarget .dist { color: var(--ring); }
+  @media (prefers-reduced-motion: reduce) { #rose { transition: none; } }
+</style>
+</head>
+<body>
+  <h1>Де Теремки?</h1>
+
+  <div class="dial" aria-hidden="true">
+    <svg viewBox="-100 -100 200 200">
+      <circle r="96" fill="var(--dial)" stroke="var(--ring)" stroke-width="2.5"/>
+      <g id="rose">
+        <g id="ticks" stroke="var(--muted)"></g>
+        <text y="-72" text-anchor="middle" fill="var(--needle)" font-size="13" font-weight="700">Пн</text>
+        <text y="82" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="700">Пд</text>
+        <text x="78" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="700">Сх</text>
+        <text x="-78" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="700">Зх</text>
+        <!-- Teremky needle, rotated to bearing inside the rose -->
+        <g id="needle">
+          <polygon points="0,-62 9,6 0,0 -9,6" fill="var(--needle)"/>
+          <polygon points="0,62 9,6 0,0 -9,6" fill="var(--muted)" opacity=".35"/>
+          <text y="-66" text-anchor="middle" fill="var(--fg)" font-size="9" font-weight="700" letter-spacing="1">ТЕРЕМКИ</text>
+        </g>
+      </g>
+      <circle r="5" fill="var(--ring)"/>
+      <!-- fixed lubber line = phone top -->
+      <polygon points="0,-99 5,-90 -5,-90" fill="var(--fg)"/>
+    </svg>
+  </div>
+
+  <div id="readout">
+    <div class="dist" id="dist">—</div>
+    <div class="sub" id="sub">Тисни кнопку, зорієнтуємось на місцевості</div>
+  </div>
+
+  <button id="go">Знайти Теремки</button>
+  <div class="err" id="err" hidden></div>
+
+<script>
+const TEREMKY = { lat: 50.3667, lon: 30.4547 }; // ст. м. Теремки, Київ
+const $ = id => document.getElementById(id);
+const rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
+
+// ticks
+const ticks = $('ticks');
+for (let i = 0; i < 72; i++) {
+  const a = rad(i * 5), big = i % 6 === 0;
+  const r1 = big ? 84 : 88, r2 = 92;
+  const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  l.setAttribute('x1', Math.sin(a) * r1); l.setAttribute('y1', -Math.cos(a) * r1);
+  l.setAttribute('x2', Math.sin(a) * r2); l.setAttribute('y2', -Math.cos(a) * r2);
+  l.setAttribute('stroke-width', big ? 1.6 : .8);
+  ticks.appendChild(l);
+}
+
+function bearing(a, b) {
+  const φ1 = rad(a.lat), φ2 = rad(b.lat), Δλ = rad(b.lon - a.lon);
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  return (deg(Math.atan2(y, x)) + 360) % 360;
+}
+function distanceKm(a, b) {
+  const R = 6371, dφ = rad(b.lat - a.lat), dλ = rad(b.lon - a.lon);
+  const h = Math.sin(dφ/2)**2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dλ/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+let target = null, heading = 0, shown = 0;
+
+function render() {
+  if (target === null) return;
+  // rose rotates opposite to heading so Пн points north; needle sits at bearing inside it
+  let want = -heading;
+  let d = ((want - shown + 540) % 360) - 180; // shortest path, no 359→0 spin
+  shown += d;
+  $('rose').style.transform = `rotate(${shown}deg)`;
+  $('needle').setAttribute('transform', `rotate(${target})`);
+  const off = Math.abs(((target - heading + 540) % 360) - 180);
+  document.body.classList.toggle('onTarget', off < 8);
+}
+
+function onOrient(e) {
+  let h = null;
+  if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading; // iOS
+  else if (e.absolute && e.alpha != null) h = 360 - e.alpha;                   // Android
+  if (h == null) return;
+  const so = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+  heading = (h + so + 360) % 360;
+  render();
+}
+
+function fail(msg) { const el = $('err'); el.textContent = msg; el.hidden = false; }
+
+async function start() {
+  $('err').hidden = true;
+  // iOS 13+: permission must be asked inside the tap
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    try {
+      const p = await DeviceOrientationEvent.requestPermission();
+      if (p !== 'granted') return fail('Без доступу до компаса ніяк. Дозволь «Рух і орієнтація» в налаштуваннях Safari.');
+    } catch { return fail('Не вдалось запитати доступ до компаса.'); }
+  }
+  if ('ondeviceorientationabsolute' in window) addEventListener('deviceorientationabsolute', onOrient);
+  else addEventListener('deviceorientation', onOrient);
+
+  if (!navigator.geolocation) return fail('Геолокація недоступна в цьому браузері.');
+  $('sub').textContent = 'Шукаю, де ти є…';
+  navigator.geolocation.watchPosition(pos => {
+    const me = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+    target = bearing(me, TEREMKY);
+    const km = distanceKm(me, TEREMKY);
+    $('dist').innerHTML = km < 1
+      ? `${Math.round(km * 1000)}<small>м</small>`
+      : `${Math.round(km).toLocaleString('uk-UA')}<small>км</small>`;
+    $('sub').textContent = km < 0.3 ? 'Ти на Теремках. Можна видихнути.' : `Азимут ${Math.round(target)}° · тримай червону стрілку вгорі`;
+    $('go').hidden = true;
+    render();
+  }, err => fail(err.code === 1 ? 'Дай доступ до геолокації, інакше хрін зорієнтуєшся.' : 'Не можу визначити місце. Вийди з бетонної коробки.'),
+  { enableHighAccuracy: true, maximumAge: 10000 });
+
+  try { await navigator.wakeLock?.request('screen'); } catch {}
+}
+$('go').addEventListener('click', start);
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
