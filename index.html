@@ -31,7 +31,6 @@
   h1 { margin: 0; font-size: 15px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
   .dial { position: relative; width: min(82vw, 380px); aspect-ratio: 1; }
   .dial svg { width: 100%; height: 100%; display: block; }
-  #rose { transition: transform .15s linear; transform-origin: 50% 50%; }
   .dist { font-size: clamp(40px, 12vw, 64px); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
   .dist small { font-size: .4em; color: var(--muted); font-weight: 600; margin-left: 4px; }
   .sub { margin-top: 8px; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
@@ -42,7 +41,6 @@
   button:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
   .err { color: var(--needle); font-size: 14px; max-width: 34ch; }
   .onTarget .dist { color: var(--ring); }
-  @media (prefers-reduced-motion: reduce) { #rose { transition: none; } }
 </style>
 </head>
 <body>
@@ -58,10 +56,10 @@
         <text x="78" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="700">Сх</text>
         <text x="-78" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="700">Зх</text>
         <!-- Teremky needle, rotated to bearing inside the rose -->
-        <g id="needle">
+        <g id="needle" visibility="hidden">
           <polygon points="0,-62 9,6 0,0 -9,6" fill="var(--needle)"/>
           <polygon points="0,62 9,6 0,0 -9,6" fill="var(--muted)" opacity=".35"/>
-          <text y="-66" text-anchor="middle" fill="var(--fg)" font-size="9" font-weight="700" letter-spacing="1">ТЕРЕМКИ</text>
+          <circle cy="-62" r="3" fill="var(--fg)"/>
         </g>
       </g>
       <circle r="5" fill="var(--ring)"/>
@@ -72,6 +70,7 @@
 
   <div id="readout">
     <div class="dist" id="dist">—</div>
+    <div class="sub" id="hdg"></div>
     <div class="sub" id="sub">Тисни кнопку, зорієнтуємось на місцевості</div>
   </div>
 
@@ -107,64 +106,78 @@ function distanceKm(a, b) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-let target = null, heading = 0, shown = 0;
+let target = null;        // bearing to Teremky, deg from true north
+let heading = null;       // where phone top points, deg
+let shownRose = 0, shownNeedle = 0, lastOrient = 0;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const norm = a => ((a % 360) + 540) % 360 - 180; // → [-180,180)
 
-function render() {
-  if (target === null) return;
-  // rose rotates opposite to heading so Пн points north; needle sits at bearing inside it
-  let want = -heading;
-  let d = ((want - shown + 540) % 360) - 180; // shortest path, no 359→0 spin
-  shown += d;
-  $('rose').style.transform = `rotate(${shown}deg)`;
-  $('needle').setAttribute('transform', `rotate(${target})`);
-  const off = Math.abs(((target - heading + 540) % 360) - 180);
-  document.body.classList.toggle('onTarget', off < 8);
+// rAF loop: eases toward the latest sensor/GPS values, every frame
+function frame() {
+  const k = reduce ? 1 : 0.25;
+  if (heading !== null) shownRose += norm(-heading - shownRose) * k;
+  if (target !== null) shownNeedle += norm(target - shownNeedle) * k;
+  // SVG transform attr rotates around (0,0) = dial centre. No CSS transform-origin
+  // bullshit — that's what threw the whole rose off-screen in iOS WebKit.
+  $('rose').setAttribute('transform', `rotate(${shownRose.toFixed(2)})`);
+  $('needle').setAttribute('transform', `rotate(${shownNeedle.toFixed(2)})`);
+  if (target !== null && heading !== null) {
+    const off = norm(target - heading);
+    document.body.classList.toggle('onTarget', Math.abs(off) < 8);
+    $('hdg').textContent = Math.abs(off) < 8 ? 'Дивишся прямо на Теремки'
+      : `Повернись ${off > 0 ? 'праворуч' : 'ліворуч'} на ${Math.round(Math.abs(off))}°`;
+  }
+  requestAnimationFrame(frame);
 }
+requestAnimationFrame(frame);
 
 function onOrient(e) {
   let h = null;
-  if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading; // iOS
-  else if (e.absolute && e.alpha != null) h = 360 - e.alpha;                   // Android
-  if (h == null) return;
+  if (typeof e.webkitCompassHeading === 'number' && e.webkitCompassHeading >= 0) h = e.webkitCompassHeading; // iOS (any browser = WebKit)
+  else if (e.absolute && typeof e.alpha === 'number') h = 360 - e.alpha;   // Android absolute
+  if (h == null || isNaN(h)) return;
   const so = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
-  heading = (h + so + 360) % 360;
-  render();
+  heading = ((h + so) % 360 + 360) % 360;
+  lastOrient = Date.now();
 }
 
 function fail(msg) { const el = $('err'); el.textContent = msg; el.hidden = false; }
 
 async function start() {
   $('err').hidden = true;
-  // iOS 13+: permission must be asked inside the tap
+  // iOS: must be the FIRST await inside the tap, before geolocation, or the gesture is spent
   if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
     try {
       const p = await DeviceOrientationEvent.requestPermission();
-      if (p !== 'granted') return fail('Без доступу до компаса ніяк. Дозволь «Рух і орієнтація» в налаштуваннях Safari.');
-    } catch { return fail('Не вдалось запитати доступ до компаса.'); }
+      if (p !== 'granted') fail('Компас заборонений. Стрілка покаже азимут, але не крутитиметься. Дозволь «Рух і орієнтація» і перезавантаж.');
+    } catch { fail('Не вдалось запитати доступ до компаса.'); }
   }
-  if ('ondeviceorientationabsolute' in window) addEventListener('deviceorientationabsolute', onOrient);
-  else addEventListener('deviceorientation', onOrient);
+  addEventListener('deviceorientationabsolute', onOrient);
+  addEventListener('deviceorientation', onOrient);
+  setTimeout(() => { if (!lastOrient) fail('Компас мовчить. Відкрий у Safari/Chrome, не в Telegram, і покрути телефон вісімкою.'); }, 3000);
 
   if (!navigator.geolocation) return fail('Геолокація недоступна в цьому браузері.');
   $('sub').textContent = 'Шукаю, де ти є…';
   navigator.geolocation.watchPosition(pos => {
     const me = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+    const first = target === null;
     target = bearing(me, TEREMKY);
+    if (first) shownNeedle = target;
+    $('needle').setAttribute('visibility', 'visible');
     const km = distanceKm(me, TEREMKY);
     $('dist').innerHTML = km < 1
       ? `${Math.round(km * 1000)}<small>м</small>`
       : `${Math.round(km).toLocaleString('uk-UA')}<small>км</small>`;
-    $('sub').textContent = km < 0.3 ? 'Ти на Теремках. Можна видихнути.' : `Азимут ${Math.round(target)}° · тримай червону стрілку вгорі`;
+    $('sub').textContent = km < 0.3 ? 'Ти на Теремках. Можна видихнути.' : `Азимут на Теремки ${Math.round(target)}° · ±${Math.round(pos.coords.accuracy)} м`;
     $('go').hidden = true;
-    render();
   }, err => fail(err.code === 1 ? 'Дай доступ до геолокації, інакше хрін зорієнтуєшся.' : 'Не можу визначити місце. Вийди з бетонної коробки.'),
-  { enableHighAccuracy: true, maximumAge: 10000 });
+  { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
 
   try { await navigator.wakeLock?.request('screen'); } catch {}
 }
 $('go').addEventListener('click', start);
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
 </script>
 </body>
 </html>
