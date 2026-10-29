@@ -1,0 +1,7 @@
+  /* LOCKED ON TERЕМKY */
+  .locked #ringOuter { stroke: var(--gold); stroke-width: 6; }
+  .locked .dial svg { filter: drop-shadow(0 0 28px rgb(255 201 74 / .9)); }
+  .locked .dist { color: var(--gold); }
+  .locked .hint { color: var(--gold); animation: wiggle .5s ease-in-out infinite alternate; }
+  @keyframes wiggle { from { transform: scale(1) rotate(-2deg); } to { transform: scale(1.08) rotate(2deg); } }
+  .locked { background: radial-gradient(circle at 50% 40%, rgb(255 201 74 / .28), transparent 65%), var(--bg); }

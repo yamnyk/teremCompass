@@ -1,0 +1,7 @@
+  .dial { position: relative; width: min(86vw, 400px); aspect-ratio: 1; }
+  .dial svg { width: 100%; height: 100%; display: block; overflow: visible;
+    filter: drop-shadow(0 0 calc(var(--heat) * 22px) rgb(255 74 46 / .7)); }
+  #ringOuter { stroke: var(--ring); transition: stroke .25s, stroke-width .25s; }
+  #pin { filter: drop-shadow(0 0 6px rgb(255 74 46 / .9)); }
+  #pinPulse { transform-box: fill-box; transform-origin: center; animation: pulse 1.4s ease-out infinite; }
+  @keyframes pulse { from { opacity: .7; transform: scale(.6); } to { opacity: 0; transform: scale(2.2); } }

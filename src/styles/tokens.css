@@ -1,0 +1,7 @@
+  /* Night field, brass dial. Teremky = hot red-orange that heats up as you aim. */
+  :root {
+    --bg: #14110f; --dial: #211c18; --ring: #b8925a; --fg: #efe6d8;
+    --muted: #8a7f70; --hot: #ff4a2e; --gold: #ffc94a;
+    --heat: 0;
+    color-scheme: dark;
+  }
