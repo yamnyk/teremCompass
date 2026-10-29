@@ -1,0 +1,11 @@
+{
+  "format_on_save": "on",
+  "formatter": "prettier",
+  "languages": {
+    "TypeScript": { "prettier": { "allowed": true } },
+    "JavaScript": { "prettier": { "allowed": true } },
+    "CSS": { "prettier": { "allowed": true } },
+    "HTML": { "prettier": { "allowed": true } },
+    "JSON": { "prettier": { "allowed": true } }
+  }
+}
