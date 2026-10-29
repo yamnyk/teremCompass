@@ -10,60 +10,62 @@ export interface StepsIcons {
 }
 
 export const uk = {
-  title: 'Де Теремки?',
+  title: "Де Теремки?",
   dial: {
-    north: 'Пн',
-    south: 'Пд',
-    east: 'Сх',
-    west: 'Зх',
+    north: "Пн",
+    south: "Пд",
+    east: "Сх",
+    west: "Зх",
   },
   readout: {
-    distEmpty: '—',
-    sub: 'Тисни кнопку, зорієнтуємось на місцевості',
+    distEmpty: "—",
+    sub: "Тисни кнопку, зорієнтуємось на місцевості",
   },
   buttons: {
-    go: 'Знайти Теремки',
-    fix: 'Як дати доступ',
-    install: 'Встановити як апку',
-    retry: 'Спробувати ще',
-    sheetClose: 'Зрозумів',
+    go: "Знайти Теремки",
+    fix: "Як дати доступ",
+    install: "Встановити як апку",
+    retry: "Спробувати ще",
+    sheetClose: "Зрозумів",
   },
   sheet: {
-    title: 'Закинь Теремки на головний екран',
-    warn: 'Відкрив з Telegram чи Instagram? Там цієї кнопки нема. Спершу «Відкрити в Safari / в браузері», потім усе як вище.',
-    geoTitle: 'Як увімкнути геолокацію',
+    title: "Закинь Теремки на головний екран",
+    warn: "Відкрив з Telegram чи Instagram? Там цієї кнопки нема. Спершу «Відкрити в Safari / в браузері», потім усе як вище.",
+    geoTitle: "Як увімкнути геолокацію",
   },
-  cheers: ['ЮХУУУ!', 'ТЕРЕМКИ!', 'ОСЬ ВОНИ!', 'ВАУ!'],
+  cheers: ["ЮХУУУ!", "ТЕРЕМКИ!", "ОСЬ ВОНИ!", "ВАУ!"],
   hint: {
-    locked: 'Теремки прямо перед тобою 🎯',
-    almost: (right: boolean) => `Майже! ${right ? 'Трохи праворуч →' : '← Трохи ліворуч'}`,
-    warmer: (right: boolean, a: number) => `Тепліше… ${right ? 'праворуч' : 'ліворуч'} ${a}°`,
+    locked: "Теремки прямо перед тобою 🎯",
+    almost: (right: boolean) =>
+      `Майже! ${right ? "Трохи праворуч →" : "← Трохи ліворуч"}`,
+    warmer: (right: boolean, a: number) =>
+      `Тепліше… ${right ? "праворуч" : "ліворуч"} ${a}°`,
     cold: (right: boolean, a: number) =>
-      `Холодно. Розвернись ${right ? 'праворуч' : 'ліворуч'} на ${a}°`,
+      `Холодно. Розвернись ${right ? "праворуч" : "ліворуч"} на ${a}°`,
   },
   units: {
-    m: 'м',
-    km: 'км',
+    m: "м",
+    km: "км",
   },
-  demoDist: '3 139',
+  demoDist: "3 139",
   sub: {
-    searching: 'Шукаю, де ти є…',
-    arrived: 'Ти на Теремках. Можна видихнути.',
+    searching: "Шукаю, де ти є…",
+    arrived: "Ти на Теремках. Можна видихнути.",
     toward: (azimuth: number) => `до Теремків · азимут ${azimuth}°`,
   },
   errors: {
     geoDenied: (message: string) =>
       `Браузер каже: геолокацію заборонено (${message}). Це блок на рівні системи або сайту, не апки.`,
-    geoDeniedFallback: 'PERMISSION_DENIED',
-    geoTimeout: 'GPS не встиг. Вийди ближче до вікна або надвір, тисни ще раз.',
-    geoUnknown: (message: string) => 'Не можу визначити місце: ' + message,
-    geoUnknownFallback: 'невідома помилка',
-    geoUnavailable: 'Геолокація недоступна в цьому браузері.',
+    geoDeniedFallback: "PERMISSION_DENIED",
+    geoTimeout: "GPS не встиг. Вийди ближче до вікна або надвір, тисни ще раз.",
+    geoUnknown: (message: string) => "Не можу визначити місце: " + message,
+    geoUnknownFallback: "невідома помилка",
+    geoUnavailable: "Геолокація недоступна в цьому браузері.",
     compassDenied:
-      'Компас заборонений. Стрілка покаже азимут, але не крутитиметься. Дозволь «Рух і орієнтація» і перезавантаж.',
-    compassRequestFailed: 'Не вдалось запитати доступ до компаса.',
+      "Компас заборонений. Стрілка покаже азимут, але не крутитиметься. Дозволь «Рух і орієнтація» і перезавантаж.",
+    compassRequestFailed: "Не вдалось запитати доступ до компаса.",
     compassSilent:
-      'Компас мовчить. Відкрий у Safari/Chrome, не в Telegram, і покрути телефон вісімкою.',
+      "Компас мовчить. Відкрий у Safari/Chrome, не в Telegram, і покрути телефон вісімкою.",
   },
   geoFixSteps: (p: StepsPlatform): string[] => {
     if (p.isIOS && /CriOS/.test(p.ua))
@@ -84,7 +86,9 @@ export const uk = {
         `Налаштування телефону → <b>Місцезнаходження</b> увімкнено, браузеру дозволено`,
         `Перезавантаж сторінку`,
       ];
-    return [`Тисни іконку замка біля адреси → дозволь геолокацію → перезавантаж`];
+    return [
+      `Тисни іконку замка біля адреси → дозволь геолокацію → перезавантаж`,
+    ];
   },
   installSteps: (p: StepsPlatform, icons: StepsIcons): string[] => {
     const { SHARE, DOTS } = icons;

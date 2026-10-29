@@ -7,7 +7,7 @@ export function ding() {
     [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
       const o = audio!.createOscillator(),
         g = audio!.createGain();
-      o.type = 'triangle';
+      o.type = "triangle";
       o.frequency.value = f;
       g.gain.setValueAtTime(0, t + i * 0.09);
       g.gain.linearRampToValueAtTime(0.18, t + i * 0.09 + 0.02);

@@ -3,3 +3,4 @@ pnpm-lock.yaml
 public
 docs
 node_modules
+coverage

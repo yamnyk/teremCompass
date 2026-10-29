@@ -12,7 +12,8 @@ export function bearing(a: LatLon, b: LatLon) {
     φ2 = rad(b.lat),
     Δλ = rad(b.lon - a.lon);
   const y = Math.sin(Δλ) * Math.cos(φ2);
-  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  const x =
+    Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
   return (deg(Math.atan2(y, x)) + 360) % 360;
 }
 export function distanceKm(a: LatLon, b: LatLon) {
@@ -20,6 +21,7 @@ export function distanceKm(a: LatLon, b: LatLon) {
     dφ = rad(b.lat - a.lat),
     dλ = rad(b.lon - a.lon);
   const h =
-    Math.sin(dφ / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dλ / 2) ** 2;
+    Math.sin(dφ / 2) ** 2 +
+    Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dλ / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }
