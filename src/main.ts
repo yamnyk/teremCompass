@@ -1,10 +1,13 @@
-import { initFx } from './celebrate/confetti';
+import { $ } from './lib/dom';
+
 import { initDemo } from './demo';
 import { initInstall } from './install';
 import { startLoop } from './loop';
-import { $ } from './lib/dom';
+
+import { initFx } from './celebrate/confetti';
 import { start } from './sensors/location';
 import { registerSW } from './sw-register';
+
 import { renderApp } from './ui/app';
 import { buildTicks } from './ui/dial';
 import { initSheet } from './ui/sheet';
