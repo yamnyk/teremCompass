@@ -11,11 +11,11 @@
 - `tsconfig.json` include lists a `tests` dir that does not exist yet.
 - Service worker `catch(() => caches.match(...))` can resolve `undefined` (original behavior); typed with a cast.
 - Module script runs deferred (after parse) whereas the original classic script ran inline at end of body: negligible timing difference.
-- `tsconfig.sw.json` inherits `exclude: ["src/sw.ts"]` from tsconfig.json, so `tsc -p tsconfig.sw.json` fails with TS18003; it needs `"exclude": []`. (Verified sw.ts typechecks cleanly with that override via a temporary config, since removed.)
+- `tsconfig.sw.json` inherits `exclude: ["src/sw.ts"]` from tsconfig.json, so `tsc -p tsconfig.sw.json` fails with TS18003; it needs `"exclude": []`. (Verified sw.ts typechecks cleanly with that override via a temporary config, since removed.) **Resolved:** `"exclude": []` added; SW typecheck now runs in `pnpm typecheck`/`pnpm build`.
 
 ## Phase 2a (tooling and tests)
 
-- ESLint is dropped entirely (decision): `lint` script removed, no eslint config. The "ESLint skipped" entry above is now a permanent decision, not a pending revisit.
+- ESLint is dropped for now (user decision): `lint` script removed, no eslint config. Revisit once typescript-eslint supports TypeScript 7.
 - `tsconfig.json` `include` now resolves: `tests/` exists (geo, hint, i18n-steps tests). The "tests dir does not exist" entry above is resolved.
 - `pnpm build` emits `WARN inlineDynamicImports option is deprecated, please use codeSplitting: false instead.` (from the Vite/PWA build chain, not src). Not fixed.
 - `src/lib/platform.ts` (`isIOS`, `isStandalone`, `ua`) touches `navigator`/`matchMedia` at import time, so it is untested and cannot be imported by tests without jsdom. `isIOS` is therefore only exercised through the i18n tests, which take the platform as a parameter.
