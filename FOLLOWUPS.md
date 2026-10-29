@@ -26,3 +26,4 @@
 ## Feature ideas
 
 - Desktop direction: desktops have no compass (`deviceorientation` never fires), so there is currently no way to tell which way Teremky is. Come up with a desktop-friendly way to show the direction (approach TBD).
+- Route button: a button that builds a route to Teremky (in a maps app). It is hidden until Teremky is "found" and appears only after that. TBD: does "found" mean the first lock (aimed at Teremky, the celebration moment) or simply once the location/bearing is known? Also TBD: which maps provider/app it opens, and whether the button stays visible after unlocking.
