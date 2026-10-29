@@ -22,3 +22,7 @@
 - `src/lib/geo.ts` `norm` returns the lower bound for 540 (`norm(540) === -180`), which is in `[-180, 180)`; the test pins this behavior.
 - Prettier reformatted `index.html`, `vercel.json`, all `src/styles/*.css`, `src/i18n/uk.ts`, `src/lib/geo.ts`, `src/lib/platform.ts`, `src/ui/icons.ts` (formatting only, no logic changes). `index.html` `<head>` tags are unchanged in content.
 - Vitest 5 is installed with vite 8.3.5 as a peer; `pnpm install` reported no peer warnings. TypeScript 7 is not a vitest peer, so no TS7 conflict was observed.
+
+## Feature ideas
+
+- Desktop direction: desktops have no compass (`deviceorientation` never fires), so there is currently no way to tell which way Teremky is. Come up with a desktop-friendly way to show the direction (approach TBD).
