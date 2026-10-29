@@ -1,0 +1,6 @@
+@media (prefers-reduced-motion: reduce) {
+  #pinPulse,
+  .locked .hint {
+    animation: none;
+  }
+}

@@ -1,0 +1,20 @@
+button {
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--ring);
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 28px;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+.err {
+  color: var(--hot);
+  font-size: 14px;
+  max-width: 34ch;
+}
