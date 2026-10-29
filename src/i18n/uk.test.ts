@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { t } from '../src/i18n';
-import { SHARE, DOTS } from '../src/ui/icons';
-import type { StepsPlatform } from '../src/i18n/uk';
+import { t } from '.';
+import { SHARE, DOTS } from '../ui/icons';
+import type { StepsPlatform } from './uk';
 
 const UA_IOS_CHROME =
   'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/120.0.6099.119 Mobile/15E148 Safari/604.1';

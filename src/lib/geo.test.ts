@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { rad, deg, norm, bearing, distanceKm } from '../src/lib/geo';
-import { TEREMKY } from '../src/config';
+import { rad, deg, norm, bearing, distanceKm } from './geo';
+import { TEREMKY } from '../config';
 
 const KYIV_CENTER = { lat: 50.4501, lon: 30.5234 };
 const EQUATOR = { lat: 0, lon: 0 };

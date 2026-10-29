@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { hintText } from '../src/ui/hint';
-import { t } from '../src/i18n';
+import { hintText } from './hint';
+import { t } from '../i18n';
 
 describe('hintText', () => {
   it('locked returns the locked string regardless of direction or angle', () => {
