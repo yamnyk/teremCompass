@@ -1,6 +1,6 @@
-import { t } from '../i18n';
-import { $ } from '../lib/dom';
-import { rad } from '../lib/geo';
+import { t } from "../i18n";
+import { $ } from "../lib/dom";
+import { rad } from "../lib/geo";
 
 export const dialTemplate = () => `<div class="dial" aria-hidden="true">
     <svg viewBox="-120 -120 240 240">
@@ -37,24 +37,24 @@ export const dialTemplate = () => `<div class="dial" aria-hidden="true">
   </div>`;
 
 export function buildTicks() {
-  const ticks = $('ticks');
+  const ticks = $("ticks");
   for (let i = 0; i < 72; i++) {
     const a = rad(i * 5),
       big = i % 6 === 0;
     const r1 = big ? 84 : 88,
       r2 = 92;
-    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    l.setAttribute('x1', String(Math.sin(a) * r1));
-    l.setAttribute('y1', String(-Math.cos(a) * r1));
-    l.setAttribute('x2', String(Math.sin(a) * r2));
-    l.setAttribute('y2', String(-Math.cos(a) * r2));
-    l.setAttribute('stroke-width', String(big ? 1.6 : 0.8));
+    const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    l.setAttribute("x1", String(Math.sin(a) * r1));
+    l.setAttribute("y1", String(-Math.cos(a) * r1));
+    l.setAttribute("x2", String(Math.sin(a) * r2));
+    l.setAttribute("y2", String(-Math.cos(a) * r2));
+    l.setAttribute("stroke-width", String(big ? 1.6 : 0.8));
     ticks.appendChild(l);
   }
 }
 
 // SVG attr rotates around (0,0) = dial centre (CSS transform-origin breaks in iOS WebKit)
 export function setRotation(shownRose: number, shownNeedle: number) {
-  $('rose').setAttribute('transform', `rotate(${shownRose.toFixed(2)})`);
-  $('needle').setAttribute('transform', `rotate(${shownNeedle.toFixed(2)})`);
+  $("rose").setAttribute("transform", `rotate(${shownRose.toFixed(2)})`);
+  $("needle").setAttribute("transform", `rotate(${shownNeedle.toFixed(2)})`);
 }

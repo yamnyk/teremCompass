@@ -23,5 +23,6 @@
 }
 .locked {
   background:
-    radial-gradient(circle at 50% 40%, rgb(255 201 74 / 0.28), transparent 65%), var(--bg);
+    radial-gradient(circle at 50% 40%, rgb(255 201 74 / 0.28), transparent 65%),
+    var(--bg);
 }

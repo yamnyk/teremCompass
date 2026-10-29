@@ -1,4 +1,4 @@
-import { t } from '../i18n';
+import { t } from "../i18n";
 
 export function hintText(locked: boolean, off: number, a: number): string {
   return locked

@@ -1,4 +1,6 @@
 export function registerSW() {
-  if ('serviceWorker' in navigator)
-    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
+  if ("serviceWorker" in navigator)
+    navigator.serviceWorker
+      .register("sw.js", { updateViaCache: "none" })
+      .catch(() => {});
 }

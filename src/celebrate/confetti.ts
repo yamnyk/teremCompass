@@ -1,5 +1,5 @@
-import { $ } from '../lib/dom';
-import { reduce } from '../lib/platform';
+import { $ } from "../lib/dom";
+import { reduce } from "../lib/platform";
 
 interface Particle {
   x: number;
@@ -25,18 +25,18 @@ function sizeFx() {
 }
 
 export function initFx() {
-  fx = $<HTMLCanvasElement>('fx');
-  ctx = fx.getContext('2d')!;
-  addEventListener('resize', sizeFx);
+  fx = $<HTMLCanvasElement>("fx");
+  ctx = fx.getContext("2d")!;
+  addEventListener("resize", sizeFx);
   sizeFx();
 }
 
 export function confetti() {
   if (reduce) return;
-  const r = document.querySelector('.dial')!.getBoundingClientRect();
+  const r = document.querySelector(".dial")!.getBoundingClientRect();
   const cx = (r.left + r.width / 2) * devicePixelRatio,
     cy = (r.top + r.height * 0.05) * devicePixelRatio;
-  const cols = ['#ffc94a', '#ff4a2e', '#efe6d8', '#b8925a', '#3d8bff'];
+  const cols = ["#ffc94a", "#ff4a2e", "#efe6d8", "#b8925a", "#3d8bff"];
   for (let i = 0; i < 160; i++) {
     const a = Math.random() * Math.PI * 2,
       v = (4 + Math.random() * 10) * devicePixelRatio;
