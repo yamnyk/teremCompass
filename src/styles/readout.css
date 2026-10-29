@@ -1,4 +1,25 @@
-  .dist { font-size: clamp(40px, 12vw, 64px); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
-  .dist small { font-size: .4em; color: var(--muted); font-weight: 600; margin-left: 4px; }
-  .hint { margin-top: 10px; font-size: 19px; font-weight: 700; min-height: 1.3em; color: color-mix(in srgb, var(--fg), var(--hot) calc(var(--heat) * 100%)); }
-  .sub { margin-top: 6px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.dist {
+  font-size: clamp(40px, 12vw, 64px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.dist small {
+  font-size: 0.4em;
+  color: var(--muted);
+  font-weight: 600;
+  margin-left: 4px;
+}
+.hint {
+  margin-top: 10px;
+  font-size: 19px;
+  font-weight: 700;
+  min-height: 1.3em;
+  color: color-mix(in srgb, var(--fg), var(--hot) calc(var(--heat) * 100%));
+}
+.sub {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}

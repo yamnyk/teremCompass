@@ -20,7 +20,6 @@ export function distanceKm(a: LatLon, b: LatLon) {
     dφ = rad(b.lat - a.lat),
     dλ = rad(b.lon - a.lon);
   const h =
-    Math.sin(dφ / 2) ** 2 +
-    Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dλ / 2) ** 2;
+    Math.sin(dφ / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dλ / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }

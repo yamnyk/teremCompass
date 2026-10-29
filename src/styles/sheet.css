@@ -1,20 +1,85 @@
-  /* install */
-  #install {
-    background: transparent; color: var(--ring); border: 1.5px solid var(--ring);
-    font-size: 15px; padding: 10px 20px;
+/* install */
+#install {
+  background: transparent;
+  color: var(--ring);
+  border: 1.5px solid var(--ring);
+  font-size: 15px;
+  padding: 10px 20px;
+}
+.sheetBg {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.55);
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sheet {
+  width: 100%;
+  max-width: 440px;
+  background: var(--dial);
+  border: 1px solid #3a322b;
+  border-bottom: 0;
+  border-radius: 20px 20px 0 0;
+  padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+  text-align: left;
+  animation: up 0.25s ease-out;
+}
+@keyframes up {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
   }
-  .sheetBg { position: fixed; inset: 0; background: rgb(0 0 0 / .55); z-index: 10; display: flex; align-items: flex-end; justify-content: center; }
-  .sheet {
-    width: 100%; max-width: 440px; background: var(--dial); border: 1px solid #3a322b; border-bottom: 0;
-    border-radius: 20px 20px 0 0; padding: 22px 20px calc(22px + env(safe-area-inset-bottom)); text-align: left;
-    animation: up .25s ease-out;
-  }
-  @keyframes up { from { transform: translateY(40px); opacity: 0; } }
-  .sheet h2 { margin: 0 0 14px; font-size: 19px; }
-  .sheet ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; counter-reset: s; }
-  .sheet li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; font-size: 15px; line-height: 1.4; counter-increment: s; }
-  .sheet li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; background: var(--ring); color: var(--bg); font-weight: 800; display: grid; place-items: center; font-size: 14px; }
-  .sheet b { color: var(--gold); }
-  .sheet .ico { display: inline-block; vertical-align: -4px; width: 18px; height: 18px; }
-  .sheet .warn { margin-top: 16px; font-size: 13px; color: var(--muted); }
-  .sheet button { margin-top: 18px; width: 100%; }
+}
+.sheet h2 {
+  margin: 0 0 14px;
+  font-size: 19px;
+}
+.sheet ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  counter-reset: s;
+}
+.sheet li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 15px;
+  line-height: 1.4;
+  counter-increment: s;
+}
+.sheet li::before {
+  content: counter(s);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ring);
+  color: var(--bg);
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+.sheet b {
+  color: var(--gold);
+}
+.sheet .ico {
+  display: inline-block;
+  vertical-align: -4px;
+  width: 18px;
+  height: 18px;
+}
+.sheet .warn {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.sheet button {
+  margin-top: 18px;
+  width: 100%;
+}

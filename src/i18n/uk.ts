@@ -37,8 +37,7 @@ export const uk = {
   hint: {
     locked: 'Теремки прямо перед тобою 🎯',
     almost: (right: boolean) => `Майже! ${right ? 'Трохи праворуч →' : '← Трохи ліворуч'}`,
-    warmer: (right: boolean, a: number) =>
-      `Тепліше… ${right ? 'праворуч' : 'ліворуч'} ${a}°`,
+    warmer: (right: boolean, a: number) => `Тепліше… ${right ? 'праворуч' : 'ліворуч'} ${a}°`,
     cold: (right: boolean, a: number) =>
       `Холодно. Розвернись ${right ? 'праворуч' : 'ліворуч'} на ${a}°`,
   },

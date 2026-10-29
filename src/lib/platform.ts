@@ -3,5 +3,6 @@ export const isStandalone =
   matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 export const ua = navigator.userAgent;
 export const isIOS =
-  /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  /iPhone|iPad|iPod/.test(ua) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 export const isAndroid = /Android/.test(ua);
