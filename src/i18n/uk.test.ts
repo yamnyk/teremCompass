@@ -209,12 +209,6 @@ describe("message functions", () => {
     expect(t.sub.toward(247)).toContain("247°");
   });
 
-  it("cheers has twenty unique entries, all non-empty", () => {
-    expect(t.cheers).toHaveLength(20);
-    expect(new Set(t.cheers).size).toBe(20);
-    for (const c of t.cheers) expect(c.length).toBeGreaterThan(0);
-  });
-
   it("sub.towardMasked hides the azimuth", () => {
     expect(t.sub.towardMasked).toContain("****");
     expect(t.sub.towardMasked).not.toMatch(/\d/);

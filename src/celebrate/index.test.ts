@@ -4,7 +4,7 @@ import { triggerBoom } from "./boom";
 import { confetti } from "./confetti";
 import { ding } from "./sound";
 import { state } from "../state";
-import { t } from "../i18n";
+import { cheers } from "./cheers";
 
 vi.mock("./boom", () => ({ triggerBoom: vi.fn() }));
 vi.mock("./confetti", () => ({ confetti: vi.fn() }));
@@ -32,16 +32,23 @@ describe("celebrate", () => {
     expect(vibrate).toHaveBeenCalledTimes(1);
   });
 
-  it("passes a random cheer from t.cheers to triggerBoom (index from Math.random)", () => {
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    celebrate();
-    expect(triggerBoom).toHaveBeenCalledWith(t.cheers[0]);
-  });
-
-  it("picks the last cheer when Math.random is close to 1", () => {
-    vi.spyOn(Math, "random").mockReturnValue(0.9999);
-    celebrate();
-    expect(triggerBoom).toHaveBeenCalledWith(t.cheers[t.cheers.length - 1]);
+  it("never shows the same cheer twice in a row, and shows all of them each round", () => {
+    const shown: string[] = [];
+    for (let i = 0; i < cheers.length * 3; i++) {
+      state.lastBoom = 0;
+      celebrate();
+      shown.push(vi.mocked(triggerBoom).mock.calls.at(-1)![0]);
+    }
+    for (let i = 1; i < shown.length; i++)
+      expect(shown[i]).not.toBe(shown[i - 1]);
+    // earlier tests may have left the bag mid-round, so 3 rounds' worth of draws
+    // shows each cheer 2 to 4 times, never 0
+    const counts = new Map<string, number>();
+    for (const c of shown) counts.set(c, (counts.get(c) ?? 0) + 1);
+    for (const c of cheers) {
+      expect(counts.get(c)).toBeGreaterThanOrEqual(2);
+      expect(counts.get(c)).toBeLessThanOrEqual(4);
+    }
   });
 
   it("vibrates with the pattern [40, 30, 40, 30, 160]", () => {
