@@ -15,6 +15,10 @@ vi.mock("./sw-register", () => ({
   registerSW: () => h.calls.push("registerSW"),
 }));
 vi.mock("./ui/privacy", () => ({ initEye: () => h.calls.push("initEye") }));
+vi.mock("./ui/tour", () => ({ initTour: () => h.calls.push("initTour") }));
+vi.mock("./ui/update", () => ({
+  initUpdate: () => h.calls.push("initUpdate"),
+}));
 vi.mock("./ui/sheet", () => ({ initSheet: () => h.calls.push("initSheet") }));
 vi.mock("./ui/dial", () => ({ buildTicks: () => h.calls.push("buildTicks") }));
 vi.mock("./ui/app", () => ({
@@ -31,11 +35,13 @@ describe("main", () => {
     expect(h.calls).toEqual([
       "renderApp",
       "initEye",
+      "initTour",
       "buildTicks",
       "initFx",
       "startLoop",
       "initSheet",
       "initInstall",
+      "initUpdate",
       "initDemo",
       "registerSW",
     ]);

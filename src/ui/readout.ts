@@ -14,7 +14,8 @@ export const controlsTemplate = () => `<button id="go">${t.buttons.go}</button>
   <div class="err" id="err" hidden></div>
   <button id="fix" hidden>${t.buttons.fix}</button>
   <button id="install" hidden>${t.buttons.install}</button>
-  <button id="eye" type="button"></button>`;
+  <button id="eye" type="button"></button>
+  <button id="help" type="button" aria-label="${t.whatsNew.help}">?</button>`;
 
 export function fail(msg: string) {
   const el = $("err");

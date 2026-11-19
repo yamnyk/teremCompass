@@ -4,6 +4,8 @@ import { fxTemplate } from "../celebrate/confetti";
 import { dialTemplate } from "./dial";
 import { controlsTemplate, readoutTemplate } from "./readout";
 import { sheetTemplate } from "./sheet";
+import { tourTemplate } from "./tour";
+import { updateTemplate } from "./update";
 
 // Renders directly into <body> (the flex container); inserted before the module <script>.
 export function renderApp() {
@@ -16,6 +18,8 @@ export function renderApp() {
         readoutTemplate(),
         controlsTemplate(),
         sheetTemplate(),
+        tourTemplate(),
+        updateTemplate(),
         [flashTemplate(), boomTemplate(), fxTemplate()].join("\n  "),
       ].join("\n\n  ") +
       "\n",

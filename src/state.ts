@@ -7,6 +7,7 @@ export const state = {
   locked: false,
   found: false,
   masked: false,
+  updateDismissed: false,
   lastKm: null as number | null,
   lastAzimuth: null as number | null,
   lastBoom: 0,

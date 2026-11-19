@@ -9,6 +9,17 @@ export interface StepsIcons {
   DOTS: string;
 }
 
+export interface ReleaseEntry {
+  title: string;
+  text: string;
+  preview?: string;
+}
+
+export interface Release {
+  id: string;
+  entries: ReleaseEntry[];
+}
+
 export const uk = {
   title: "Де Теремки?",
   dial: {
@@ -59,6 +70,53 @@ export const uk = {
   eye: {
     hide: "Сховати відстань і азимут",
     show: "Показати відстань і азимут",
+  },
+  update: {
+    banner: "Є нова версія Теремків",
+    reload: "Оновити",
+    dismiss: "Пізніше",
+    stuckTitle: "Не оновилось? Ось що зробити",
+    stuckSteps: (p: StepsPlatform): string[] => {
+      if (p.isIOS)
+        return [
+          `Свайпом вгору відкрий перемикач апок і <b>закрий Теремки</b>`,
+          `Відкрий Теремки знову з головного екрана`,
+          `Якщо досі стара версія: видали іконку і <b>додай Теремки на головний екран</b> заново`,
+        ];
+      if (p.isAndroid)
+        return [
+          `Відкрий список останніх апок і <b>закрий Теремки</b>`,
+          `Відкрий Теремки знову`,
+          `Якщо досі стара версія: у налаштуваннях Chrome → <b>Налаштування сайтів</b> → очисти дані сайту і відкрий знову`,
+        ];
+      return [
+        `Закрий вкладку чи вікно з Теремками`,
+        `Відкрий сайт знову і натисни <b>Cmd/Ctrl + Shift + R</b>`,
+      ];
+    },
+  },
+  whatsNew: {
+    next: "Далі",
+    skip: "Пропустити",
+    done: "Зрозумів",
+    help: "Що нового",
+    releases: [
+      {
+        id: "2026-11-eye-route",
+        entries: [
+          {
+            title: "Око: сховай, де ти",
+            text: "Тисни 👁 угорі праворуч, і відстань та азимут стануть ****. Тепер скриншот не видає, де ти є. Вибір запам'ятовується.",
+            preview: "eye",
+          },
+          {
+            title: "Маршрут до Теремків",
+            text: "Коли навів на Теремки, з'являється кнопка «Прокласти маршрут». Вона відкриє Google Maps з дорогою до них.",
+            preview: "route",
+          },
+        ],
+      },
+    ] as Release[],
   },
   hint: {
     locked: "Теремки прямо перед тобою 🎯",

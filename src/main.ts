@@ -11,6 +11,8 @@ import { registerSW } from "./sw-register";
 import { renderApp } from "./ui/app";
 import { buildTicks } from "./ui/dial";
 import { initEye } from "./ui/privacy";
+import { initTour } from "./ui/tour";
+import { initUpdate } from "./ui/update";
 import { initSheet } from "./ui/sheet";
 
 import "./styles/tokens.css";
@@ -21,15 +23,19 @@ import "./styles/controls.css";
 import "./styles/locked.css";
 import "./styles/celebrate.css";
 import "./styles/sheet.css";
+import "./styles/tour.css";
+import "./styles/update.css";
 import "./styles/motion.css";
 
 renderApp();
 initEye();
+initTour();
 buildTicks();
 initFx();
 startLoop();
 $("go").addEventListener("click", start);
 initSheet();
 initInstall();
+initUpdate();
 initDemo();
 registerSW();

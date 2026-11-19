@@ -1,23 +1,14 @@
 import { t } from "../i18n";
 import { $ } from "../lib/dom";
+import { get, set } from "../lib/storage";
 import { state } from "../state";
 import { renderMasked } from "./readout";
 
 export const MASK_KEY = "teremcompass:masked";
 
-export function loadMasked(): boolean {
-  try {
-    return localStorage.getItem(MASK_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
+export const loadMasked = (): boolean => get(MASK_KEY) === "1";
 
-function saveMasked(masked: boolean) {
-  try {
-    localStorage.setItem(MASK_KEY, masked ? "1" : "0");
-  } catch {}
-}
+const saveMasked = (masked: boolean) => set(MASK_KEY, masked ? "1" : "0");
 
 function paintEye() {
   const eye = $("eye");

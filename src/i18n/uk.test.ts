@@ -226,6 +226,35 @@ describe("message functions", () => {
     expect(t.eye.show).not.toBe(t.eye.hide);
   });
 
+  it("update.stuckSteps differs per platform and always has steps", () => {
+    const ios = t.update.stuckSteps({ ua: "", isIOS: true, isAndroid: false });
+    const android = t.update.stuckSteps({
+      ua: "",
+      isIOS: false,
+      isAndroid: true,
+    });
+    const desktop = t.update.stuckSteps({
+      ua: "",
+      isIOS: false,
+      isAndroid: false,
+    });
+    for (const steps of [ios, android, desktop])
+      expect(steps.length).toBeGreaterThan(0);
+    expect(new Set([ios.join(), android.join(), desktop.join()]).size).toBe(3);
+  });
+
+  it("whatsNew releases have unique ids and non-empty entries", () => {
+    const ids = t.whatsNew.releases.map((r) => r.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const r of t.whatsNew.releases) {
+      expect(r.entries.length).toBeGreaterThan(0);
+      for (const e of r.entries) {
+        expect(e.title.length).toBeGreaterThan(0);
+        expect(e.text.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
   it("units are exposed as stored", () => {
     expect(t.units.m).toBe(t.units.m.trim());
     expect(t.units.km).not.toBe(t.units.m);

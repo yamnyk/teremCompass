@@ -28,16 +28,24 @@ button:focus-visible {
   outline: 2px solid var(--fg);
   outline-offset: 3px;
 }
-#eye {
+#eye,
+#help {
   position: fixed;
   top: calc(env(safe-area-inset-top) + 12px);
-  right: 16px;
   width: 44px;
   height: 44px;
   padding: 0;
   font-size: 22px;
   line-height: 1;
   background: var(--dial);
+}
+#eye {
+  right: 16px;
+}
+#help {
+  left: 16px;
+  color: var(--ring);
+  font-weight: 800;
 }
 .err {
   color: var(--hot);
