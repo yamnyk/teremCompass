@@ -10,6 +10,7 @@ import { registerSW } from "./sw-register";
 
 import { renderApp } from "./ui/app";
 import { buildTicks } from "./ui/dial";
+import { initEye } from "./ui/privacy";
 import { initSheet } from "./ui/sheet";
 
 import "./styles/tokens.css";
@@ -23,6 +24,7 @@ import "./styles/sheet.css";
 import "./styles/motion.css";
 
 renderApp();
+initEye();
 buildTicks();
 initFx();
 startLoop();

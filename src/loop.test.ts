@@ -140,6 +140,28 @@ describe("loop", () => {
     expect(celebrate).toHaveBeenCalledTimes(1);
   });
 
+  it("route link: hidden before a lock, shown while locked, hidden after unlock, found stays true", async () => {
+    const { startLoop, state } = await load();
+    const route = document.getElementById("route")!;
+    state.target = 100;
+    state.heading = 100 - 90;
+    startLoop();
+    tick();
+    expect(route.hidden).toBe(true);
+    expect(state.found).toBe(false);
+    state.heading = 100;
+    tick();
+    expect(route.hidden).toBe(false);
+    expect(state.found).toBe(true);
+    state.heading = 100 - LOCK_OUT - 1;
+    tick();
+    expect(route.hidden).toBe(true);
+    expect(state.found).toBe(true);
+    state.heading = 100;
+    tick();
+    expect(route.hidden).toBe(false);
+  });
+
   it("does not lock exactly at LOCK_IN", async () => {
     const { startLoop, state } = await load();
     state.target = 100;

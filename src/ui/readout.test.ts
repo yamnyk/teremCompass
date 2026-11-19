@@ -6,14 +6,22 @@ import {
   showDistance,
   setSub,
   setHint,
+  showArrived,
+  showAzimuth,
+  renderMasked,
 } from "./readout";
 import { renderApp } from "./app";
+import { state } from "../state";
+import { ROUTE_URL } from "../config";
 import { $ } from "../lib/dom";
 import { t } from "../i18n";
 
 beforeEach(() => {
   document.body.innerHTML = "";
   renderApp();
+  state.masked = false;
+  state.lastKm = null;
+  state.lastAzimuth = null;
 });
 
 describe("templates", () => {
@@ -94,6 +102,71 @@ describe("showDistance", () => {
   it("zero is metres", () => {
     showDistance(0);
     expect($("dist").innerHTML).toBe(`0<small>${t.units.m}</small>`);
+  });
+});
+
+describe("route link", () => {
+  it("is hidden, opens the Google Maps URL in a new tab", () => {
+    const a = $<HTMLAnchorElement>("route");
+    expect(a.hidden).toBe(true);
+    expect(a.getAttribute("href")).toBe(ROUTE_URL);
+    expect(ROUTE_URL).toBe(
+      "https://www.google.com/maps/dir/?api=1&destination=50.3667,30.4547",
+    );
+    expect(a.target).toBe("_blank");
+    expect(a.rel).toBe("noopener");
+    expect(a.textContent).toBe(t.buttons.route);
+  });
+});
+
+describe("masking", () => {
+  it("masked distance is **** with no unit or digits", () => {
+    state.masked = true;
+    showDistance(12.3);
+    expect($("dist").textContent).toBe("****");
+    expect($("dist").querySelector("small")).toBeNull();
+    expect(state.lastKm).toBe(12.3);
+  });
+
+  it("masked azimuth uses the masked sub", () => {
+    state.masked = true;
+    showAzimuth(247);
+    expect($("sub").textContent).toBe(t.sub.towardMasked);
+    expect(state.lastAzimuth).toBe(247);
+  });
+
+  it("unmasked azimuth shows the number", () => {
+    showAzimuth(247);
+    expect($("sub").textContent).toBe(t.sub.toward(247));
+  });
+
+  it("renderMasked re-renders stored values both ways", () => {
+    showDistance(3.4);
+    showAzimuth(90);
+    state.masked = true;
+    renderMasked();
+    expect($("dist").textContent).toBe("****");
+    expect($("sub").textContent).toBe(t.sub.towardMasked);
+    state.masked = false;
+    renderMasked();
+    expect($("dist").innerHTML).toBe(`3<small>${t.units.km}</small>`);
+    expect($("sub").textContent).toBe(t.sub.toward(90));
+  });
+
+  it("renderMasked is a no-op before any fix", () => {
+    state.masked = true;
+    renderMasked();
+    expect($("dist").textContent).toBe(t.readout.distEmpty);
+    expect($("sub").textContent).toBe(t.readout.sub);
+  });
+
+  it("showArrived clears the stored azimuth", () => {
+    showAzimuth(10);
+    showArrived();
+    expect($("sub").textContent).toBe(t.sub.arrived);
+    expect(state.lastAzimuth).toBeNull();
+    renderMasked();
+    expect($("sub").textContent).toBe(t.sub.arrived);
   });
 });
 

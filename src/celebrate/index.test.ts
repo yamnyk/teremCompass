@@ -41,7 +41,7 @@ describe("celebrate", () => {
   it("picks the last cheer when Math.random is close to 1", () => {
     vi.spyOn(Math, "random").mockReturnValue(0.9999);
     celebrate();
-    expect(triggerBoom).toHaveBeenCalledWith(t.cheers[3]);
+    expect(triggerBoom).toHaveBeenCalledWith(t.cheers[t.cheers.length - 1]);
   });
 
   it("vibrates with the pattern [40, 30, 40, 30, 160]", () => {

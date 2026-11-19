@@ -11,6 +11,8 @@ const KEY_IDS = [
   "err",
   "fix",
   "install",
+  "eye",
+  "route",
   "sheet",
   "steps",
   "sheetClose",

@@ -14,6 +14,7 @@ vi.mock("./sensors/location", () => ({ start: () => h.start() }));
 vi.mock("./sw-register", () => ({
   registerSW: () => h.calls.push("registerSW"),
 }));
+vi.mock("./ui/privacy", () => ({ initEye: () => h.calls.push("initEye") }));
 vi.mock("./ui/sheet", () => ({ initSheet: () => h.calls.push("initSheet") }));
 vi.mock("./ui/dial", () => ({ buildTicks: () => h.calls.push("buildTicks") }));
 vi.mock("./ui/app", () => ({
@@ -29,6 +30,7 @@ describe("main", () => {
 
     expect(h.calls).toEqual([
       "renderApp",
+      "initEye",
       "buildTicks",
       "initFx",
       "startLoop",

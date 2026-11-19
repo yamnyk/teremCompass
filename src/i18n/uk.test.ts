@@ -209,14 +209,25 @@ describe("message functions", () => {
     expect(t.sub.toward(247)).toContain("247°");
   });
 
-  it("cheers has four entries, all non-empty", () => {
-    expect(t.cheers).toHaveLength(4);
+  it("cheers has twenty unique entries, all non-empty", () => {
+    expect(t.cheers).toHaveLength(20);
+    expect(new Set(t.cheers).size).toBe(20);
     for (const c of t.cheers) expect(c.length).toBeGreaterThan(0);
   });
 
-  it("units and demoDist are exposed as stored", () => {
+  it("sub.towardMasked hides the azimuth", () => {
+    expect(t.sub.towardMasked).toContain("****");
+    expect(t.sub.towardMasked).not.toMatch(/\d/);
+  });
+
+  it("route and eye strings are non-empty", () => {
+    expect(t.buttons.route).toBe("Прокласти маршрут");
+    expect(t.eye.hide.length).toBeGreaterThan(0);
+    expect(t.eye.show).not.toBe(t.eye.hide);
+  });
+
+  it("units are exposed as stored", () => {
     expect(t.units.m).toBe(t.units.m.trim());
     expect(t.units.km).not.toBe(t.units.m);
-    expect(t.demoDist.length).toBeGreaterThan(0);
   });
 });

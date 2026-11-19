@@ -4,7 +4,13 @@ import { t } from "../i18n";
 import { $ } from "../lib/dom";
 import { bearing, distanceKm } from "../lib/geo";
 import { state } from "../state";
-import { fail, setSub, showDistance } from "../ui/readout";
+import {
+  fail,
+  setSub,
+  showArrived,
+  showAzimuth,
+  showDistance,
+} from "../ui/readout";
 import {
   hasCompassPermissionApi,
   listenCompass,
@@ -44,7 +50,8 @@ export async function start() {
       $("needle").setAttribute("visibility", "visible");
       const km = distanceKm(me, TEREMKY);
       showDistance(km);
-      setSub(km < 0.3 ? t.sub.arrived : t.sub.toward(Math.round(state.target)));
+      if (km < 0.3) showArrived();
+      else showAzimuth(Math.round(state.target));
       $("go").hidden = true;
       $("fix").hidden = true;
       $("err").hidden = true;

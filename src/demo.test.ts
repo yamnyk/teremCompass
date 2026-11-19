@@ -40,10 +40,18 @@ describe("initDemo", () => {
     expect(state.shownNeedle).toBe(57);
     expect(el("needle").getAttribute("visibility")).toBe("visible");
     expect(el("dist").innerHTML).toBe(
-      `${t.demoDist}<small>${t.units.km}</small>`,
+      `${(3139).toLocaleString("uk-UA").replace(/ /g, "&nbsp;")}<small>${t.units.km}</small>`,
     );
     expect(el("go").hidden).toBe(true);
     expect(state.heading).toBeNull();
+  });
+
+  it("with ?demo the distance honors the mask", async () => {
+    const { initDemo, state } = await load("?demo");
+    state.masked = true;
+    initDemo();
+    expect(el("dist").textContent).toBe("****");
+    expect(state.lastKm).toBe(3139);
   });
 
   it("spins heading by 1.5 degrees every 30 ms and wraps at 360", async () => {

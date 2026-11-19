@@ -23,10 +23,13 @@ function frame() {
     root.style.setProperty("--heat", Math.max(0, 1 - a / 90).toFixed(3));
     if (!state.locked && a < LOCK_IN) {
       state.locked = true;
+      state.found = true;
+      $("route").hidden = false;
       document.body.classList.add("locked");
       celebrate();
     } else if (state.locked && a > LOCK_OUT) {
       state.locked = false;
+      $("route").hidden = true;
       document.body.classList.remove("locked");
     }
     setHint(hintText(state.locked, off, a));

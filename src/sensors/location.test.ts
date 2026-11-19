@@ -173,6 +173,28 @@ describe("watchPosition success", () => {
     );
   });
 
+  it("masked: distance and azimuth show ****, also after a later fix", async () => {
+    const c = await load();
+    c.state.masked = true;
+    await c.loc.start();
+    c.ok(pos(48.4647, 35.0462));
+    expect(el("dist").textContent).toBe("****");
+    expect(el("sub").textContent).toBe(t.sub.towardMasked);
+    c.ok(pos(50.0, 30.0));
+    expect(el("dist").textContent).toBe("****");
+    expect(el("sub").textContent).toBe(t.sub.towardMasked);
+    expect(c.state.lastKm).not.toBeNull();
+    expect(c.state.lastAzimuth).not.toBeNull();
+  });
+
+  it("arrived clears the stored azimuth so a toggle does not resurrect it", async () => {
+    const c = await load();
+    await c.loc.start();
+    c.ok(pos(48.4647, 35.0462));
+    c.ok(pos(TEREMKY.lat + 0.001, TEREMKY.lon));
+    expect(c.state.lastAzimuth).toBeNull();
+  });
+
   it("arrived (< 0.3 km): arrived sub", async () => {
     const c = await load();
     await c.loc.start();
